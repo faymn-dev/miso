@@ -1,0 +1,67 @@
+@import url("./layout.css");
+@import url("./no-project.css");
+
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --interactive: #eee;
+    --interactive-hover: #e1e1e1;
+
+    --foreground: #000;
+    --foreground-dimmer: #555;
+}
+
+html,
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+input,
+button {
+    --size: 2rem;
+
+    height: var(--size);
+    padding: 0 0.875rem;
+    border: none;
+    outline: none;
+    background-color: var(--interactive);
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+}
+
+input:hover,
+input:focus,
+button:hover {
+    background-color: var(--interactive-hover);
+}
+
+button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+
+button i {
+    font-size: 1rem;
+}
+
+.section-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.section-text p {
+    color: var(--foreground-dimmer);
+}

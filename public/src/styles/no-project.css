@@ -1,0 +1,28 @@
+.no-project {
+    margin: 0 auto;
+    margin-top: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.no-project__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.no-project__form {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.no-project__form input {
+    width: 13rem;
+    max-width: 100%;
+}
+
+.no-project button {
+    width: fit-content;
+}
