@@ -1,6 +1,6 @@
-.no-project {
-    margin: 0 auto;
-    margin-top: 8rem;
+.no-project,
+.projects {
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -25,4 +25,30 @@
 
 .no-project button {
     width: fit-content;
+}
+
+.projects__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.projects__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+.projects__grid__item {
+    justify-content: flex-start !important;
+}
+
+.projects__grid__item h1 {
+    font-size: 0.875rem;
+    font-weight: normal;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -1,10 +1,10 @@
 import m from "mithril"
-import { Home } from "./routes/home.js"
-import { NoProject } from "./routes/no-project.js"
+import { Project } from "./routes/project.js"
+import { Projects } from "./routes/projects.js"
 
 const root = document.body
 
-m.route(root, "/no-project", {
-    "/": Home,
-    "/no-project": NoProject,
+m.route(root, "/projects", {
+    "/projects": Projects,
+    "/projects/:id": new Project(),
 })

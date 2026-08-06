@@ -21,16 +21,24 @@
     --primary-default: #588157ff;
     --primary-stronger: #3a5a40ff;
     --primary-strongest: #344e41ff;
+
+    --default-border-radius: 0.25rem;
+
+    --layout-width: 72rem;
+    --layout-width-sm: 50rem;
+    --layout-padding: 2rem;
 }
 
 html,
 body {
     min-height: 100vh;
     overflow-x: hidden;
+    font-family: sans-serif;
 }
 
 input,
-button {
+button,
+.button {
     --size: 2rem;
 
     height: var(--size);
@@ -39,31 +47,43 @@ button {
     outline: none;
     background-color: var(--interactive);
     font-size: 0.875rem;
-    border-radius: 0.25rem;
+    border-radius: var(--default-border-radius);
     white-space: nowrap;
     transition: background-color 100ms ease;
 }
 
 input:hover,
 input:focus,
-button:hover {
+button:hover,
+.button:hover {
     background-color: var(--interactive-hover);
 }
 
-button {
+input:disabled,
+button:disabled,
+.button:disabled {
+    background-color: var(--interactive) !important;
+    cursor: not-allowed;
+}
+
+button,
+.button {
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    text-decoration: none;
+    color: black;
+    user-select: none;
 }
 
-
-button i {
+button i,
+.button i {
     font-size: 1rem;
 }
 
-button.button--square {
+.button--square {
     width: var(--size);
     padding: 0;
 }
@@ -76,4 +96,45 @@ button.button--square {
 
 .section-text p {
     color: var(--foreground-dimmer);
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* modal component */
+.modal-background {
+    background-color: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    inset: 0;
+    padding: var(--layout-padding);
+}
+
+.modal {
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 10rem;
+    max-width: var(--layout-width-sm);
+    border-radius: var(--default-border-radius);
+    z-index: 50;
+    padding: var(--layout-padding);
+}
+
+.modal__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal__content {
+    padding-top: 1rem;
 }
