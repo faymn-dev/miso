@@ -13,11 +13,7 @@ export const Layout = {
             m("div",
                 { class: "header__actions" },
                 m("button",
-                    m("i", { class: "ri-folder-download-line" }),
-                    "Export"
-                ),
-                m("button",
-                    { class: "settings" },
+                    { class: "button--square" },
                     m("i", { class: "ri-settings-line" })
                 )
             )

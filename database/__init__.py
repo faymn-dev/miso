@@ -2,7 +2,7 @@ import sqlite3
 
 from flask import g
 
-DATABASE_FILE = "miso.db"
+DATABASE_FILE = "database/miso.db"
 
 
 def get():
@@ -32,11 +32,8 @@ def init():
     conn = get()
     cursor = conn.cursor()
 
-    with open("./schema.sql") as file:
+    with open("./database/schema.sql") as file:
         schema = file.read()
         cursor.executescript(schema)
 
     conn.commit()
-
-
-init()

@@ -15,6 +15,12 @@
 
     --foreground: #000;
     --foreground-dimmer: #555;
+
+    --primary-dimmest: #dad7cdff;
+    --primary-dimmer: #a3b18aff;
+    --primary-default: #588157ff;
+    --primary-stronger: #3a5a40ff;
+    --primary-strongest: #344e41ff;
 }
 
 html,
@@ -35,6 +41,7 @@ button {
     font-size: 0.875rem;
     border-radius: 0.25rem;
     white-space: nowrap;
+    transition: background-color 100ms ease;
 }
 
 input:hover,
@@ -54,6 +61,11 @@ button {
 
 button i {
     font-size: 1rem;
+}
+
+button.button--square {
+    width: var(--size);
+    padding: 0;
 }
 
 .section-text {
