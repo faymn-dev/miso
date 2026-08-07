@@ -12,3 +12,8 @@ wheels/
 images/
 public/uploads
 miso.db
+
+.DS_Store
+
+dataset/
+dataset.yaml

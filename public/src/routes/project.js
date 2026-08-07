@@ -30,6 +30,14 @@ export function Project() {
                     ),
                     m(".projects__header__title",
                         m("button",
+                            {
+                                onclick() {
+                                    m.request({
+                                        method: "POST",
+                                        url: `/api/projects/${id}/export`,
+                                    })
+                                }
+                            },
                             m("i.ri-download-line"),
                             "Download Dataset"
                         ),
