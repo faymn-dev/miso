@@ -20,10 +20,23 @@ def home():
     return send_file("public/index.html")
 
 
-app.register_blueprint(create_blueprint("projects", ["title", "directory"]))
 app.register_blueprint(create_blueprint("labels", ["project_id", "display_text"]))
-app.register_blueprint(create_blueprint("videos", ["project_id", "source"]))
-app.register_blueprint(create_blueprint("images", ["project_id", "video_id", "source"]))
+
+
+@app.get("/api/projects/<int:id>/labels")
+def get_labels(id: int):
+    conn = database.get()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, display_text FROM labels WHERE project_id = ?", (id,))
+    labels = cursor.fetchall()
+
+    return [dict(zip(["id", "display_text"], label)) for label in labels]
+
+
+# basic crud operations for entities
+app.register_blueprint(create_blueprint("projects", ["title", "directory"]))
+app.register_blueprint(create_blueprint("images", ["project_id", "source"]))
 app.register_blueprint(
     create_blueprint(
         "rects", ["image_id", "label_id", "center_x", "center_y", "width", "height"]

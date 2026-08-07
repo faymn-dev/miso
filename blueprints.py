@@ -4,7 +4,9 @@ import database
 
 
 def create_blueprint(table_name: str, table_cols: list[str]):
-    table_cols.insert(0, "id")
+    if table_cols[0] != "id":  # auto-insert id column
+        table_cols.insert(0, "id")
+
     bp = Blueprint(f"{table_name}_bp", __name__)
 
     def to_json(row):

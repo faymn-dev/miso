@@ -14,24 +14,13 @@ CREATE TABLE IF NOT EXISTS labels (
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS videos (
+CREATE TABLE IF NOT EXISTS images (
     id INTEGER PRIMARY KEY, 
     project_id INTEGER NOT NULL, 
 
     source TEXT NOT NULL,
 
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS images (
-    id INTEGER PRIMARY KEY, 
-    project_id INTEGER NOT NULL, 
-    video_id INTEGER, 
-
-    source TEXT NOT NULL,
-
-    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
-    FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS rects (
