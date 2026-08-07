@@ -21,39 +21,49 @@
 }
 
 .editor__rects {
-    width: 10rem;
+    width: 15rem;
     display: flex;
+    gap: 0.75rem;
     flex-direction: column;
 }
 
 .editor__rects__list {
     display: flex;
     flex-direction: column;
+    gap: 0.1rem;
     flex: 1;
+    overflow-y: auto;
 }
 
-.editor__rects__action {
+.rect {
     display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    border: 2px solid #eee;
+    border-radius: var(--default-border-radius);
+    padding: 0.1rem;
 }
 
+.rect--active {
+    border-color: var(--primary-default);
+}
 
+.rect__color {
+    width: 1rem;
+    height: 1rem;
+    aspect-ratio: square;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 2px solid #eee;
+    border-radius: 10rem;
+    cursor: pointer;
+}
 
-/* m(".editor",
-                    m(".editor__image",
-                        m("img", { src: image.source })
-                    ),
-                    m(".editor__rects",
-                        m(".editor__rects__list",
-                            m(".rect",
-                                m(".rect__color"),
-                                m("span", "player")
-                            )
-                        ),
-                        m(".editor__rects__action",
-                            m("button",
-                                m("i.ri-add-line"),
-                                "Add Rect"
-                            )
-                        )
-                    )
-                ) */
+.rect__text {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.editor__rects__actions button {
+    width: 100%;
+}

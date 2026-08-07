@@ -4,17 +4,21 @@ import { Modal } from "../components/modal.js"
 export function Projects() {
     let data = []
     let open = false
+    let loading = true
 
     return {
-        oninit() {
-            m.request({
+        async oninit() {
+            data = await m.request({
                 method: "GET",
                 url: "/api/projects"
-            }).then((nextData) => {
-                data = nextData
-            });
+            })
+            loading = false
         },
         view() {
+            if (loading) {
+                return
+            }
+
             if (data.length === 0) {
                 return m("div", { class: "no-project layout" },
                     m("div", { class: "section-text" },

@@ -16,6 +16,8 @@ export function Project() {
             })
         },
         view({ attrs: { id } }) {
+            const selectedImage = images.find(i => i.id === selectedImageId)
+
             return m(".projects.layout",
                 m(".projects__header",
                     m(".projects__header__title",
@@ -45,7 +47,7 @@ export function Project() {
                 ),
                 m(Labels, { id }),
                 m(Media, { id }),
-                m(Editor)
+                selectedImage && m(Editor, { selectedImage })
             )
         }
     }
@@ -90,12 +92,12 @@ function Labels() {
                 m("div", { class: "labels" },
                     labels.length === 0 && m("p", "You haven't created any labels yet."),
                     labels.map((label, i) => (
-                        m("div.labels__item",
-                            m("div.labels__item__color", { style: `background-color: ${stringToColor(label.display_text)}` }),
+                        m(".labels__item",
+                            m(".labels__item__color", { style: `background-color: ${stringToColor(label.display_text)}` }),
                             m("input", {
                                 type: "text",
                                 value: label.display_text,
-                                placeholder: "Player",
+                                placeholder: "player",
                                 async onchange(e) {
                                     const nextText = e.target.value
                                     labels[i].display_text = nextText
@@ -221,16 +223,14 @@ function Editor() {
     let rects = []
 
     return {
-        view() {
-            if (selectedImageId === null) {
-                return
-            }
-
-            const image = images.filter(i => i.id === selectedImageId)[0]
-            if (!image) {
-                return
-            }
-
+        async oninit({ attrs: { selectedImage } }) {
+            rects = await m.request({
+                method: "GET",
+                url: `/api/images/${selectedImage.id}/rects`
+            })
+            console.log(rects)
+        },
+        view({ attrs: { selectedImage } }) {
             return m(Modal, {
                 maxWidth: 1000,
                 onclose() {
@@ -239,18 +239,70 @@ function Editor() {
             },
                 m(".editor",
                     m(".editor__image",
-                        m("img", { src: image.source })
+                        m("img", { src: selectedImage.source })
                     ),
                     m(".editor__rects",
                         m(".editor__rects__list",
-                            m(".rect",
-                                m(".rect__color"),
-                                m("span", "player")
-                            )
+                            rects.map(rect => {
+                                const label = labels.find(l => l.id === rect.label_id)
+                                if (!label) {
+                                    return
+                                }
+                                return m(".rect",
+                                    m(".rect__color", { style: `background-color: ${stringToColor(label.display_text)}` }),
+                                    m("select.button.rect__text",
+                                        {
+                                            value: label.display_text,
+                                            onchange(e) {
+                                                console.log(e.target.value)
+                                            }
+                                        },
+                                        labels.map(label => (
+                                            m("option", { value: label.display_text }, label.display_text)
+                                        ))
+                                    ),
+                                    m("button.button--square",
+                                        {
+                                            onclick() {
+                                                rects = rects.filter(r => r.id !== rect.id)
+                                                m.request({
+                                                    method: "delete",
+                                                    url: `/api/rects/${rect.id}`,
+                                                })
+                                            }
+                                        },
+                                        m("i.ri-delete-bin-line")
+                                    ),
+                                )
+                            })
                         ),
-                        m(".editor__rects__action",
+                        m(".editor__rects__actions",
                             m("button",
-                                m("i.ri-add-line"),
+                                {
+                                    disabled: labels.length === 0,
+                                    async onclick() {
+                                        const rect = {
+                                            image_id: selectedImage.id,
+                                            label_id: labels[0].id,
+                                            center_x: 0.5,
+                                            center_y: 0.5,
+                                            width: 0.5,
+                                            height: 0.5,
+                                        }
+
+                                        const { id } = await m.request({
+                                            method: "POST",
+                                            url: "/api/rects",
+                                            body: rect
+                                        })
+
+                                        rects.push({
+                                            id,
+                                            ...rect,
+                                        })
+                                    }
+                                },
+                                m("i.ri-square-line"),
                                 "Add Rect"
                             )
                         )
@@ -262,12 +314,12 @@ function Editor() {
 }
 
 function stringToColor(str) {
-    if (typeof str === "undefined") {
+    if (typeof str === "undefined" || str === "") {
         return "#eee"
     }
 
     let hash = 0;
-    str.toLowerCase().split('').forEach(char => {
+    str.split('').forEach(char => {
         hash = char.charCodeAt(0) + ((hash << 5) - hash)
     })
     let colour = '#'

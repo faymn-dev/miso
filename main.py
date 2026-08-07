@@ -1,12 +1,12 @@
-from flask import Flask, abort, send_file, request
+import os
+import uuid
+from pathlib import Path
+
+from flask import Flask, abort, request, send_file
 
 import database
 from blueprints import create_blueprint
 from utils import is_allowed_file
-import uuid
-import os
-from pathlib import Path
-
 
 app = Flask(__name__, static_url_path="", static_folder="public")
 
