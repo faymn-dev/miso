@@ -226,20 +226,35 @@ function Editor() {
     let mouse = {}
     let editorImage;
 
+    let timeoutId;
+    let saveStack = []
+
     onMouseUp()
     function onMouseUp() {
         const rect = mouse.focus > -1 ? rects[mouse.focus] : null
         if (rect) {
-            m.request({
-                method: "PUT",
-                url: `/api/rects/${rect.id}`,
-                body: {
-                    width: rect.width,
-                    height: rect.height,
-                    center_x: rect.center_x,
-                    center_y: rect.center_y,
+            saveStack.push(rect)
+            clearTimeout(timeoutId)
+            timeoutId = setTimeout(() => {
+                const visited = new Set()
+                while (saveStack.length > 0) {
+                    const rect = saveStack.pop()
+                    if (visited.has(rect.id)) {
+                        continue
+                    }
+                    visited.add(rect.id)
+                    m.request({
+                        method: "PUT",
+                        url: `/api/rects/${rect.id}`,
+                        body: {
+                            width: rect.width,
+                            height: rect.height,
+                            center_x: rect.center_x,
+                            center_y: rect.center_y,
+                        }
+                    })
                 }
-            })
+            }, 500)
         }
 
         Object.assign(mouse, {
@@ -308,6 +323,12 @@ function Editor() {
                 }
             },
                 m(".editor",
+                    {
+                        oncontextmenu(e) {
+                            e.preventDefault()
+                            onMouseUp()
+                        }
+                    },
                     m(".editor__image",
                         m("img", { src: selectedImage.source }),
                         rects.map((rect, i) => {

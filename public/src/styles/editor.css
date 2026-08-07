@@ -24,6 +24,7 @@
     position: absolute;
     border: 2px solid #eee;
     transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.2);
     cursor: move;
 }
 
@@ -40,6 +41,10 @@
     transform: translate(50%, 50%);
     cursor: se-resize;
     background: #eee;
+}
+
+.editor__rect--active .editor__rect__handle {
+    background: var(--primary-default);
 }
 
 .editor__rects {
