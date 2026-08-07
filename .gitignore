@@ -17,3 +17,5 @@ miso.db
 
 dataset/
 dataset.yaml
+
+yolo26n.pt

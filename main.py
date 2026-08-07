@@ -3,7 +3,7 @@ import os
 import uuid
 from pathlib import Path
 import shutil
-
+import random
 
 from flask import Flask, abort, request, send_file
 
@@ -64,17 +64,20 @@ def export_project(id: int):
         label_id_to_index[label_id] = i
 
     # https://docs.ultralytics.com/yolov5/tutorials/train-custom-data#12-leverage-models-for-automated-labeling
+    os.remove("dataset.yaml")
     with open("dataset.yaml", "w", encoding="utf-8") as file:
         file.write("path: dataset\n\n")
         file.write("train: images/train\n\n")
+        file.write("val: images/val\n\n")
         file.write("names:\n")
         file.writelines(f"  {i}: {labels[i][1]}\n" for i in range(len(labels)))
 
     # empty out dataset directory & ensure stuff exists
+    shutil.rmtree("./dataset")
     os.makedirs("./dataset/images/train", exist_ok=True)
     os.makedirs("./dataset/labels/train", exist_ok=True)
-    for file in glob.glob("./dataset/.*"):
-        os.remove(file)
+    os.makedirs("./dataset/images/val", exist_ok=True)
+    os.makedirs("./dataset/labels/val", exist_ok=True)
 
     # get all images and copy to train
     cursor.execute("SELECT id, source FROM images WHERE project_id = ?", (id,))
@@ -83,19 +86,27 @@ def export_project(id: int):
     for image in images:
         image_id, image_path = image[0], image[1]
 
-        # copy image to dataset
-        shutil.copy(f"./public{image_path}", "./dataset/images/train")
-
         # get all rects associated with image
-        filename = os.path.basename(image_path)
+        filename = Path(image_path).stem
         cursor.execute(
             "SELECT label_id, center_x, center_y, width, height FROM rects WHERE image_id = ?",
             (image_id,),
         )
         rects = cursor.fetchall()
 
+        images_dir = "./dataset/images/train"
+        labels_dir = "./dataset/labels/train"
+
+        # roughly 10% of images will go to validation
+        if random.random() <= 0.1:
+            images_dir = "./dataset/images/val"
+            labels_dir = "./dataset/labels/val"
+
+        # copy image to dataset
+        shutil.copy(f"./public{image_path}", images_dir)
+
         # write rects to corresponding txt file
-        with open(f"./dataset/labels/train/{filename}.txt", "w") as file:
+        with open(f"{labels_dir}/{filename}.txt", "w") as file:
             file.writelines(
                 f"{label_id_to_index[rect[0]]} {rect[1]} {rect[2]} {rect[3]} {rect[4]}\n"
                 for rect in rects
