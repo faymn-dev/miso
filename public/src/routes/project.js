@@ -1,6 +1,7 @@
 import m from "mithril"
 import { MoreOptions } from "../components/more-options.js"
 import { Modal } from "../components/modal.js"
+import { cn } from "../lib/cn.js"
 
 let project = {}
 let labels = []
@@ -222,13 +223,68 @@ function Media() {
 function Editor() {
     let rects = []
 
+    let mouse = {}
+    let editorImage;
+
+    onMouseUp()
+    function onMouseUp() {
+        Object.assign(mouse, {
+            down: false,
+            resize: false,
+            focus: -1,
+            focusDom: null,
+            offsetX: 0,
+            offsetY: 0
+        })
+    }
+
+    function onMouseMove(e) {
+        if (!mouse.down || mouse.focus === -1) {
+            return
+        }
+
+        const rect = rects[mouse.focus]
+        const pos = getMousePos(e)
+        if (mouse.resize) {
+            rect.width = (pos.x - rect.center_x) * 2
+            rect.height = (pos.y - rect.center_y) * 2
+        } else {
+            rect.center_x = pos.x - mouse.offsetX
+            rect.center_y = pos.y - mouse.offsetY
+        }
+
+        if (mouse.focusDom) {
+            Object.assign(mouse.focusDom.style, {
+                width: `${rect.width * 100}%`,
+                height: `${rect.height * 100}%`,
+                top: `${rect.center_y * 100}%`,
+                left: `${rect.center_x * 100}%`,
+            })
+        }
+    }
+
+    function getMousePos(e) {
+        const editorImageRect = editorImage.getBoundingClientRect()
+        const x = (e.clientX - editorImageRect.left) / editorImageRect.width
+        const y = (e.clientY - editorImageRect.top) / editorImageRect.height
+        return { x, y }
+    }
+
     return {
         async oninit({ attrs: { selectedImage } }) {
             rects = await m.request({
                 method: "GET",
                 url: `/api/images/${selectedImage.id}/rects`
             })
-            console.log(rects)
+        },
+        oncreate() {
+            editorImage = document.querySelector(".editor__image")
+            addEventListener("mouseup", onMouseUp)
+            addEventListener("mousemove", onMouseMove)
+        },
+        onremove() {
+            removeEventListener("mouseup", onMouseUp)
+            removeEventListener("mousemove", onMouseMove)
         },
         view({ attrs: { selectedImage } }) {
             return m(Modal, {
@@ -239,26 +295,77 @@ function Editor() {
             },
                 m(".editor",
                     m(".editor__image",
-                        m("img", { src: selectedImage.source })
+                        m("img", { src: selectedImage.source }),
+                        rects.map((rect, i) => {
+                            return m("div",
+                                {
+                                    class: cn("editor__rect", mouse.focus === i && "editor__rect--active"),
+                                    style: {
+                                        width: `${rect.width * 100}%`,
+                                        height: `${rect.height * 100}%`,
+                                        top: `${rect.center_y * 100}%`,
+                                        left: `${rect.center_x * 100}%`,
+                                    },
+                                    onmousedown(e) {
+                                        const offset = getMousePos(e)
+                                        Object.assign(mouse, {
+                                            down: true,
+                                            focus: i,
+                                            focusDom: e.target,
+                                            offsetX: offset.x - rect.center_x,
+                                            offsetY: offset.y - rect.center_y,
+                                        })
+                                    },
+                                },
+                                m(".editor__rect__handle", {
+                                    onmousedown(e) {
+                                        e.stopPropagation()
+                                        Object.assign(mouse, {
+                                            down: true,
+                                            focus: i,
+                                            focusDom: e.target.parentNode,
+                                            resize: true
+                                        })
+                                    }
+                                })
+                            )
+                        }),
                     ),
                     m(".editor__rects",
                         m(".editor__rects__list",
-                            rects.map(rect => {
+                            rects.map((rect, i) => {
                                 const label = labels.find(l => l.id === rect.label_id)
                                 if (!label) {
                                     return
                                 }
-                                return m(".rect",
+
+                                return m("div",
+                                    {
+                                        class: cn("rect", mouse.focus === i && "rect--active"),
+                                        onmousedown() {
+                                            mouse.down = false
+                                            mouse.focus = i
+                                            mouse.resize = false
+                                        }
+                                    },
                                     m(".rect__color", { style: `background-color: ${stringToColor(label.display_text)}` }),
                                     m("select.button.rect__text",
                                         {
-                                            value: label.display_text,
+                                            value: rect.label_id,
                                             onchange(e) {
-                                                console.log(e.target.value)
+                                                const nextLabelId = parseInt(e.target.value)
+                                                rects[i].label_id = nextLabelId
+                                                m.request({
+                                                    method: "PUT",
+                                                    url: `/api/rects/${rect.id}`,
+                                                    body: {
+                                                        label_id: nextLabelId
+                                                    }
+                                                })
                                             }
                                         },
                                         labels.map(label => (
-                                            m("option", { value: label.display_text }, label.display_text)
+                                            m("option", { value: label.id }, label.display_text)
                                         ))
                                     ),
                                     m("button.button--square",
