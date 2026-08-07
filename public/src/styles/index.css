@@ -148,3 +148,31 @@ p {
 .modal__content {
     padding-top: 1rem;
 }
+
+/* more options component */
+.more-options {
+    position: relative;
+}
+
+.more-options__content {
+    position: absolute;
+    height: fit-content;
+    z-index: 50;
+    right: 0;
+    transform: translateY(0.25rem);
+    border: 2px solid #eee;
+    background-color: white;
+    border-radius: var(--default-border-radius);
+    padding: 0.1rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 7rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.125);
+}
+
+.more-options__content button {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 0.25rem;
+    padding: 0 0.5rem;
+}

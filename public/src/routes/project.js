@@ -1,4 +1,5 @@
 import m from "mithril"
+import { MoreOptions } from "../components/more-options.js"
 
 let project = {}
 let labels = []
@@ -15,19 +16,32 @@ export function Project() {
             })
         },
         view({ attrs: { id } }) {
-            return m("div", { class: "projects layout" },
-                m("div", { class: "projects__header" },
-                    m("div", { class: "projects__header__title" },
+            return m(".projects.layout",
+                m(".projects__header",
+                    m(".projects__header__title",
                         m("a.button.button--square",
                             { href: "#!/projects" },
                             m("i.ri-home-line"),
                         ),
                         m("h1", project.title),
                     ),
-                    m("button",
-                        m("i", { class: "ri-download-line" }),
-                        "Download Dataset"
-                    ),
+                    m(".projects__header__title",
+                        m("button",
+                            m("i.ri-download-line"),
+                            "Download Dataset"
+                        ),
+                        m(MoreOptions,
+                            m("button", {
+                                async onclick() {
+                                    await m.request({
+                                        method: "DELETE",
+                                        url: `/api/projects/${id}`
+                                    })
+                                    m.route.set(`/projects`)
+                                }
+                            }, m("i.ri-delete-bin-line"), "Delete")
+                        )
+                    )
                 ),
                 m(Labels, { id }),
                 m(Media, { id })

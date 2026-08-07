@@ -8,8 +8,8 @@ export function Modal() {
                     m("div", { class: "modal__header" },
                         m("div",
                             { class: "section-text" },
-                            m("h1", title),
-                            m("p", description),
+                            title && m("h1", title),
+                            description && m("p", description),
                         ),
                         m("button", { class: "button--square", onclick: onclose }, m("i", { class: "ri-close-line" }))
                     ),
