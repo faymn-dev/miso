@@ -26,6 +26,11 @@
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.2);
     cursor: move;
+    opacity: 0.6;
+}
+
+.editor__rect:hover {
+    opacity: 1;
 }
 
 .editor__rect--active {
@@ -34,8 +39,8 @@
 
 .editor__rect__handle {
     position: absolute;
-    width: 1rem;
-    height: 1rem;
+    width: 0.75rem;
+    height: 0.75rem;
     right: 0;
     bottom: 0;
     transform: translate(50%, 50%);

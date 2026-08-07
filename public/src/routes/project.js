@@ -227,34 +227,21 @@ function Editor() {
     let editorImage;
 
     let timeoutId;
-    let saveStack = []
 
     onMouseUp()
     function onMouseUp() {
         const rect = mouse.focus > -1 ? rects[mouse.focus] : null
         if (rect) {
-            saveStack.push(rect)
-            clearTimeout(timeoutId)
-            timeoutId = setTimeout(() => {
-                const visited = new Set()
-                while (saveStack.length > 0) {
-                    const rect = saveStack.pop()
-                    if (visited.has(rect.id)) {
-                        continue
-                    }
-                    visited.add(rect.id)
-                    m.request({
-                        method: "PUT",
-                        url: `/api/rects/${rect.id}`,
-                        body: {
-                            width: rect.width,
-                            height: rect.height,
-                            center_x: rect.center_x,
-                            center_y: rect.center_y,
-                        }
-                    })
+            m.request({
+                method: "PUT",
+                url: `/api/rects/${rect.id}`,
+                body: {
+                    width: rect.width,
+                    height: rect.height,
+                    center_x: rect.center_x,
+                    center_y: rect.center_y,
                 }
-            }, 500)
+            })
         }
 
         Object.assign(mouse, {
@@ -317,7 +304,7 @@ function Editor() {
         },
         view({ attrs: { selectedImage } }) {
             return m(Modal, {
-                maxWidth: 1000,
+                maxWidth: 1500,
                 onclose() {
                     selectedImageId = null
                 }
@@ -442,6 +429,8 @@ function Editor() {
                                             id,
                                             ...rect,
                                         })
+
+                                        m.redraw()
                                     }
                                 },
                                 m("i.ri-square-line"),

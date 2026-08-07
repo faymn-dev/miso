@@ -31,6 +31,7 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     font-family: sans-serif;
+    user-select: none;
 }
 
 input,
@@ -126,12 +127,13 @@ p {
     position: fixed;
     inset: 0;
     padding: var(--layout-padding);
+    display: grid;
+    place-items: center;
 }
 
 .modal {
     background-color: white;
     margin: 0 auto;
-    margin-top: 10rem;
     max-width: var(--layout-width-sm);
     border-radius: var(--default-border-radius);
     z-index: 50;
