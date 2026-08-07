@@ -1,5 +1,6 @@
 import m from "mithril"
 import { MoreOptions } from "../components/more-options.js"
+import { Modal } from "../components/modal.js"
 
 let project = {}
 let labels = []
@@ -7,7 +8,6 @@ let images = []
 let selectedImageId = null
 
 export function Project() {
-
     return {
         async oninit({ attrs: { id } }) {
             project = await m.request({
@@ -44,11 +44,13 @@ export function Project() {
                     )
                 ),
                 m(Labels, { id }),
-                m(Media, { id })
+                m(Media, { id }),
+                m(Editor)
             )
         }
     }
 }
+
 
 function Labels() {
     return {
@@ -137,7 +139,7 @@ function Media() {
         },
         view({ attrs: { id } }) {
             return m("section.project__section",
-                m("div.project__section__title",
+                m(".project__section__title",
                     m("h2", "Media"),
                     m("button",
                         {
@@ -155,6 +157,7 @@ function Media() {
                         m(".image",
                             {
                                 onclick() {
+                                    selectedImageId = imageId
                                 }
                             },
                             m("img", { src: source }),
@@ -209,6 +212,50 @@ function Media() {
                         m.redraw()
                     }
                 })
+            )
+        }
+    }
+}
+
+function Editor() {
+    let rects = []
+
+    return {
+        view() {
+            if (selectedImageId === null) {
+                return
+            }
+
+            const image = images.filter(i => i.id === selectedImageId)[0]
+            if (!image) {
+                return
+            }
+
+            return m(Modal, {
+                maxWidth: 1000,
+                onclose() {
+                    selectedImageId = null
+                }
+            },
+                m(".editor",
+                    m(".editor__image",
+                        m("img", { src: image.source })
+                    ),
+                    m(".editor__rects",
+                        m(".editor__rects__list",
+                            m(".rect",
+                                m(".rect__color"),
+                                m("span", "player")
+                            )
+                        ),
+                        m(".editor__rects__action",
+                            m("button",
+                                m("i.ri-add-line"),
+                                "Add Rect"
+                            )
+                        )
+                    )
+                )
             )
         }
     }

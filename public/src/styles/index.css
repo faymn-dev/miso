@@ -1,5 +1,6 @@
 @import url("./projects.css");
 @import url("./project.css");
+@import url("./editor.css");
 
 *,
 ::before,
@@ -137,16 +138,21 @@ p {
     max-width: var(--layout-width-sm);
     border-radius: var(--default-border-radius);
     z-index: 50;
-    padding: var(--layout-padding);
+    padding: 1.25rem;
+    position: relative;
+}
+
+.modal__close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(calc(-100% - 0.5rem));
 }
 
 .modal__header {
     display: flex;
     justify-content: space-between;
-}
-
-.modal__content {
-    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 /* more options component */

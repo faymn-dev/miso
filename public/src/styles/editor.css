@@ -1,0 +1,59 @@
+.editor {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.editor__image {
+    border: 2px solid #eee;
+    overflow: hidden;
+    position: relative;
+    background-color: black;
+    flex: 1;
+    display: grid;
+    place-items: center;
+    user-select: none;
+    pointer-events: none;
+    border-radius: var(--default-border-radius);
+}
+
+.editor__image img {
+    width: 100%;
+}
+
+.editor__rects {
+    width: 10rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor__rects__list {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.editor__rects__action {
+    display: flex;
+}
+
+
+
+/* m(".editor",
+                    m(".editor__image",
+                        m("img", { src: image.source })
+                    ),
+                    m(".editor__rects",
+                        m(".editor__rects__list",
+                            m(".rect",
+                                m(".rect__color"),
+                                m("span", "player")
+                            )
+                        ),
+                        m(".editor__rects__action",
+                            m("button",
+                                m("i.ri-add-line"),
+                                "Add Rect"
+                            )
+                        )
+                    )
+                ) */
