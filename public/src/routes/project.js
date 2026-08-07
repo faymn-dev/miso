@@ -228,6 +228,20 @@ function Editor() {
 
     onMouseUp()
     function onMouseUp() {
+        const rect = mouse.focus > -1 ? rects[mouse.focus] : null
+        if (rect) {
+            m.request({
+                method: "PUT",
+                url: `/api/rects/${rect.id}`,
+                body: {
+                    width: rect.width,
+                    height: rect.height,
+                    center_x: rect.center_x,
+                    center_y: rect.center_y,
+                }
+            })
+        }
+
         Object.assign(mouse, {
             down: false,
             resize: false,

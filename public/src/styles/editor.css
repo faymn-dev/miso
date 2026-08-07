@@ -39,7 +39,7 @@
     bottom: 0;
     transform: translate(50%, 50%);
     cursor: se-resize;
-    background: red;
+    background: #eee;
 }
 
 .editor__rects {
