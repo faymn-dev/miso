@@ -9,4 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
+images/
+public/uploads
 miso.db

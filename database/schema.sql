@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS labels (
 
 CREATE TABLE IF NOT EXISTS images (
     id INTEGER PRIMARY KEY, 
-    project_id INTEGER NOT NULL, 
+    project_id INTEGER NULL, 
 
     source TEXT NOT NULL,
 

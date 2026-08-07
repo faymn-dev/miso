@@ -94,12 +94,16 @@ button i,
     gap: 0.125rem;
 }
 
-.section-text p {
+p {
     color: var(--foreground-dimmer);
 }
 
 .spinner {
     animation: spin 1s linear infinite;
+}
+
+.hidden {
+    display: none;
 }
 
 @keyframes spin {

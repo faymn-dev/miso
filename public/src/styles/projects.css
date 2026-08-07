@@ -27,11 +27,17 @@
     width: fit-content;
 }
 
-.projects__title {
+.projects__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 2rem;
+}
+
+.projects__header__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .projects__grid {

@@ -26,7 +26,7 @@ export function Projects() {
             }
 
             return m("div", { class: "projects layout" },
-                m("div", { class: "projects__title" },
+                m("div", { class: "projects__header" },
                     m("div", { class: "section-text" },
                         m("h1", "Projects"),
                     ),
