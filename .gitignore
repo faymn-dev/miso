@@ -19,3 +19,6 @@ dataset/
 dataset.yaml
 
 yolo26n.pt
+*.pt
+
+activate.py

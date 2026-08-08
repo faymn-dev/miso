@@ -1,9 +1,8 @@
-import glob
 import os
+import random
+import shutil
 import uuid
 from pathlib import Path
-import shutil
-import random
 
 from flask import Flask, abort, request, send_file
 
